@@ -27,8 +27,8 @@ body {
   font-family: var(--sans);
   letter-spacing: 0;
   /* PCで390コンテンツの外側に出る背景。クリスタルを暗めにしてLPと馴染ませる（モバイルは全幅なので見えない） */
-  /* PCで440コンテンツの外側に出る領域。明るい淡ラベンダーに（文字は視認性のため暗色に） */
-  background: linear-gradient(180deg, #f6f3fc 0%, #ece6f8 55%, #e3dcf3 100%) fixed, #efeafb;
+  /* PCで440コンテンツの外側に出る領域。明るめだが彩度のあるラベンダーに（文字は暗色で視認性確保） */
+  background: linear-gradient(180deg, #ece0fb 0%, #d9c6f3 50%, #c5acec 100%) fixed, #ddccf4;
 }
 
 img {
@@ -1155,8 +1155,6 @@ body.is-loaded .splash {
     width: 280px;
     max-width: 100%;
     margin: 0 0 30px;
-    /* 白ロゴを明るい背景でも見えるよう、サイドのみ濃色シルエット化 */
-    filter: brightness(0) opacity(0.82);
   }
 
   .side-nav {
