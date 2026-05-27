@@ -1,0 +1,16 @@
+# OS
+.DS_Store
+
+# デザインソース・作業ファイル（デプロイ不要・大容量）
+*.ai
+*.psd
+*.tmp
+~ai-*
+/*.jpg
+/ロゴKV*
+/links/
+/MOBILE LP/
+/GIF/
+
+# バックアップ
+assets/hero-orig.gif

@@ -1,0 +1,1198 @@
+:root {
+  --stage-w: 390px;
+  --phone-w: 390px;
+  --phone-left: 0px;
+  --purple: #6e61dc;
+  --deep: #1d084e;
+  --serif: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+  --sans: "Hiragino Sans", "Yu Gothic", "YuGothic", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: #000;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  overflow-x: clip; /* hidden だと position:sticky が壊れるため clip（スクロールコンテナを作らない） */
+  color: var(--purple);
+  font-family: var(--sans);
+  letter-spacing: 0;
+  /* PCで390コンテンツの外側に出る背景。クリスタルを暗めにしてLPと馴染ませる（モバイルは全幅なので見えない） */
+  background: linear-gradient(rgba(12, 6, 40, 0.55), rgba(8, 4, 28, 0.72)), url("./assets/bg.png") center / cover fixed, #0a0524;
+}
+
+img {
+  display: block;
+  max-width: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: #000;
+  opacity: 1;
+  visibility: visible;
+  will-change: opacity;
+}
+
+.splash__phone {
+  position: relative;
+  width: min(100vw, 390px);
+  height: min(100svh, 714px);
+  overflow: hidden;
+  background: #1e1548;
+}
+
+.splash__bg,
+.splash__shade,
+.splash__copy {
+  position: absolute;
+}
+
+.splash__bg {
+  left: 50%;
+  top: 0;
+  width: 401px;
+  height: 714px;
+  object-fit: cover;
+  transform: translateX(-50%);
+}
+
+.splash__shade {
+  inset: 0;
+  background: rgba(11, 7, 40, 0.61);
+}
+
+.splash__copy {
+  left: 10%;
+  top: 46.1%;
+  width: 80%;
+  height: auto;
+}
+
+body.is-loaded .splash {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ===== シネマ的イントロ（スクロールピン＋スクラブ） ===== */
+/* .cine = 縦長スクロールトラック。.cine__pin が画面に固定され、
+   JS が scrollY からフェーズ進行度を計算して各 .cine-layer の opacity/transform を制御する */
+.cine {
+  position: relative;
+  height: 440vh; /* スクロール量＝シーケンスの長さ。長くするほどゆっくり進む */
+  background: transparent;
+}
+
+.cine__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  place-items: start center; /* 上揃え：拡大時に上が見切れないように */
+  background: transparent; /* 390外側は body の馴染ませ背景を透かす */
+}
+
+.cine__phone {
+  position: relative;
+  grid-area: 1 / 1; /* 2枚のphoneを同じセルに重ねる（背面/前面） */
+  width: 390px;
+  height: 714px;
+  transform-origin: top center; /* 上基準で拡大（上が見切れない） */
+  overflow: visible; /* crystal(幅430)を390で切らない。はみ出しは .cine__pin が viewport で clip */
+  background: transparent;
+}
+
+/* 全幅のクリスタル背景（左右の暗い領域を埋める） */
+.cine-fullbg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+.cine-layer {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  will-change: opacity, transform;
+}
+
+.cine-bg {
+  left: -6px;
+  top: 0;
+  width: 401px;
+  height: 714px;
+  object-fit: cover;
+  opacity: 1;
+}
+
+.cine-crystal {
+  left: -20px;
+  top: 145px;
+  width: 430px;
+  height: 558px;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform-origin: center center;
+  animation: crystal-breathe 7s ease-in-out infinite;
+}
+
+@keyframes crystal-breathe {
+  0%, 100% { transform: scale(1.07); }
+  50% { transform: scale(1.09); }
+}
+
+.cine-core {
+  left: 50%;
+  top: 143px;
+  width: 232px;
+  height: 273px;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: core-float 5.5s ease-in-out infinite;
+}
+
+/* core は JS が transform(translateX) を制御するため top で上下させる */
+@keyframes core-float {
+  0%, 100% { top: 143px; }
+  50% { top: 139px; }
+}
+
+.cine-idol {
+  left: 50%;
+  top: 299px;
+  width: 366px;
+  height: 399px;
+  object-fit: contain;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.cine-logo {
+  left: 15px;
+  top: 65px;
+  width: 360px;
+  height: 109px;
+  object-fit: contain;
+  opacity: 0;
+}
+
+.cine-ppp {
+  left: 15px;
+  top: 21px;
+  width: 124px;
+  height: 21px;
+  object-fit: contain;
+  opacity: 0;
+}
+
+.cine-lead {
+  left: 0;
+  top: 404px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  opacity: 0;
+}
+
+.cine-dim {
+  position: absolute;
+  inset: 0;
+  background: #0a0524;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.cine-copy {
+  left: 10%;
+  top: 46%;
+  width: 80%;
+  height: auto;
+  opacity: 1;
+}
+
+.cine-story-head {
+  left: 140px;
+  top: 49px;
+  width: 110px;
+  height: 39px;
+  object-fit: contain;
+  opacity: 0;
+}
+
+.cine-story-content {
+  left: 51px;
+  top: 151px;
+  width: 287px;
+  height: 437px;
+  object-fit: contain;
+  opacity: 0;
+}
+
+/* SCROLLインジケーター（splash下部・上下バウンス。スクロールでフェードアウト） */
+.cine-scroll {
+  position: absolute;
+  left: 50%;
+  top: 506px;
+  width: 132px;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: scroll-bounce 2.6s ease-in-out infinite;
+}
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+.page {
+  width: 100%;
+  min-height: 100vh;
+  background: transparent; /* body の馴染ませ背景を透かす */
+}
+
+.stage-wrap {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.stage {
+  position: relative;
+  width: var(--stage-w);
+  margin: 0;
+  overflow: hidden;
+  transform-origin: top left;
+  background: url("./assets/bg.png") center top / cover repeat-y, #2a1a6f;
+}
+
+.phone {
+  position: relative;
+  left: var(--phone-left);
+  width: var(--phone-w);
+  overflow: visible;
+}
+
+.hero-screen,
+.story-screen,
+.tryvii-screen,
+.ppp-screen {
+  height: 714px;
+}
+
+.screen-light {
+  background: #fff;
+}
+
+.hero-screen {
+  background: #312065;
+}
+
+.hero-bg {
+  position: absolute;
+  left: -6px;
+  top: 0;
+  width: 401px;
+  height: 714px;
+  object-fit: cover;
+}
+
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 9, 52, 0.18);
+}
+
+.hero-crystal {
+  position: absolute;
+  left: -20px;
+  top: 145px;
+  width: 430px;
+  height: 558px;
+  object-fit: cover;
+  mix-blend-mode: screen;
+}
+
+.hero-core {
+  position: absolute;
+  top: 143px;
+  width: 232px;
+  height: 273px;
+  object-fit: contain;
+  opacity: 0.92;
+  mix-blend-mode: screen;
+}
+
+.hero-idol {
+  position: absolute;
+  top: 279px;
+  width: 366px;
+  height: 399px;
+  object-fit: contain;
+}
+
+.hero-logo {
+  position: absolute;
+  left: 15px;
+  top: 65px;
+  width: 360px;
+  height: 109px;
+  object-fit: contain;
+}
+
+.hero-ppp {
+  position: absolute;
+  left: 15px;
+  top: 21px;
+  width: 124px;
+  height: 21px;
+  object-fit: contain;
+}
+
+.center-x {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.story-screen {
+  position: relative;
+}
+
+.story-bg {
+  position: absolute;
+  left: 0;
+  top: -18px;
+  width: 390px;
+  height: 732px;
+  object-fit: cover;
+}
+
+.story-shade {
+  position: absolute;
+  left: 0;
+  top: -18px;
+  width: 390px;
+  height: 732px;
+  background: rgba(35, 0, 109, 0.75);
+}
+
+.story-head {
+  position: absolute;
+  z-index: 1;
+  left: 140px;
+  top: 49px;
+  width: 110px;
+  height: 39px;
+  object-fit: contain;
+}
+
+.story-content {
+  position: absolute;
+  z-index: 1;
+  left: 51px;
+  top: 151px;
+  width: 287px;
+  height: 437px;
+  object-fit: contain;
+}
+
+.section-art {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.tryvii-screen {
+  position: relative;
+  height: 714px;
+  background: url("./assets/bg.png") center / cover;
+}
+
+.section-art--tryvii {
+  position: absolute;
+  left: 11px;
+  top: 20px;
+  width: 368px;
+  height: 1093px;
+  object-fit: contain;
+  object-position: top center;
+  z-index: 0;
+}
+
+.tryvii-crystal-a {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: -40px;
+  width: 130px;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.tryvii-crystal-b {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 540px;
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.tryvii-lead {
+  position: absolute;
+  z-index: 2;
+  left: 23px;
+  top: 151px;
+  width: 342px;
+  margin: 0;
+  color: #6b5baf;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.tryvii-photo {
+  position: absolute;
+  z-index: 2;
+  left: 45px;
+  top: 193px;
+  width: 300px;
+  height: 194px;
+  object-fit: cover;
+}
+
+.tryvii-body {
+  position: absolute;
+  z-index: 2;
+  left: 45px;
+  top: 406px;
+  width: 300px;
+  margin: 0;
+  color: #6a6095;
+  font-family: var(--sans);
+  font-size: 11px;
+  line-height: 2;
+  text-align: center;
+}
+
+.float-crystal {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+  display: none;
+}
+
+.float-crystal--a {
+  left: -40px;
+  top: 2240px;
+  width: 180px;
+  height: 170px;
+  object-fit: contain;
+  opacity: 0.85;
+}
+
+.ppp-screen {
+  position: relative;
+  height: 714px;
+  background: var(--deep);
+}
+
+.section-art--ppp {
+  position: absolute;
+  left: 0;
+  top: -103px;
+  width: 390px;
+  height: 864px;
+  object-fit: contain;
+  object-position: top center;
+  z-index: 0;
+}
+
+.ppp-photo {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 102px;
+  width: 390px;
+  height: 287px;
+  object-fit: cover;
+}
+
+.ppp-copy {
+  position: absolute;
+  z-index: 2;
+  left: 22px;
+  top: 425px;
+  width: 345px;
+  margin: 0;
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 2.2;
+  letter-spacing: 0.02em;
+}
+
+/* §3-§5 share one continuous purple crystal background (Figma: Rectangle 8).
+   Layering is by DOM order (no z-index): smc-bg < section3 < crystals < cards,
+   then the music card and condition content paint over it from later sections. */
+.support-screen {
+  position: relative;
+  height: 614px;
+  margin-top: -104px;
+  background: transparent;
+}
+
+.smc-bg {
+  position: absolute;
+  left: 0;
+  top: 183px;
+  width: 390px;
+  height: 1934px;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.section-art--support {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 390px;
+  height: 896px;
+  object-fit: contain;
+  object-position: top center;
+}
+
+.support-content {
+  position: absolute;
+  left: 53px;
+  top: 155px;
+  width: 284px;
+  height: 429px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(89, 64, 176, 0.14));
+}
+
+
+.music-screen {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+  padding: 0 0 40px;
+  background: transparent;
+}
+
+.music-card {
+  display: flex;
+  flex-direction: column;
+  width: 338px;
+  padding: 24px 22px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 16px 40px rgba(85, 67, 170, 0.14);
+}
+
+.music-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.music-hero {
+  width: 264px;
+  height: auto;
+  margin: 0 auto 14px;
+}
+
+.music-hero--sika {
+  width: 200px;
+  margin-bottom: 8px;
+}
+
+.music-desc {
+  margin: 0 0 10px;
+  color: #6a6095;
+  font-family: var(--sans);
+  font-size: 10px;
+  line-height: 1.85;
+  text-align: left;
+}
+
+.music-meta {
+  margin: 0 0 8px;
+  color: #6a6095;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.music-link {
+  align-self: flex-end;
+  color: #6845ff;
+  font-family: var(--sans);
+  font-size: 10px;
+  text-decoration: underline;
+}
+
+.music-divider {
+  height: 1px;
+  margin: 18px 0;
+  background: linear-gradient(to right, transparent, rgba(147, 124, 234, 0.4), transparent);
+}
+
+.condition-screen {
+  position: relative;
+  height: 650px;
+  margin-top: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.condition-pill {
+  position: absolute;
+  left: 37px;
+  top: 0;
+  width: 316px;
+  height: auto;
+}
+
+.condition-circle {
+  position: absolute;
+  left: -93px;
+  top: 109px;
+  width: 576px;
+  height: 576px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.condition-list {
+  position: absolute;
+  left: 30px;
+  top: 180px;
+  width: 338px;
+  margin: 0;
+  color: #4a3f80;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 2.4;
+  letter-spacing: 0;
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-break: strict;
+}
+
+.entry-screen {
+  position: relative;
+  height: 700px;
+}
+
+.section-art--entry {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 390px;
+  height: 700px;
+  object-fit: cover;
+  object-position: top center;
+  z-index: 0;
+}
+
+.entry-lead {
+  position: absolute;
+  z-index: 2;
+  left: 28px;
+  top: 208px;
+  width: 334px;
+  margin: 0;
+  color: #6a6095;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.picture-guide {
+  position: absolute;
+  z-index: 1;
+  left: 0.5px;
+  top: 240px;
+  width: 389px;
+  height: 376px;
+  object-fit: contain;
+}
+
+.flow-screen {
+  position: relative;
+  height: 672px;
+  margin-top: -60px;
+  background: url("./assets/bg.png") center / cover;
+}
+
+.section-art--flow {
+  position: absolute;
+  left: 27px;
+  top: 30px;
+  width: 336px;
+  height: 585px;
+  object-fit: contain;
+  object-position: top center;
+  z-index: 0;
+}
+
+.flow-img {
+  position: absolute;
+  z-index: 1;
+  left: 46px;
+  top: 158px;
+  width: 297px;
+}
+
+.notes-screen {
+  position: relative;
+  height: 827px;
+  margin-top: -40px;
+}
+
+.section-art--notes {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 390px;
+  height: 827px;
+  object-fit: cover;
+  object-position: top center;
+  z-index: 0;
+}
+
+.notes-list {
+  position: absolute;
+  z-index: 1;
+  left: 26px;
+  top: 127px;
+  width: 338px;
+  margin: 0;
+  color: #22184d;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 26px;
+}
+
+.faq-screen {
+  position: relative;
+  z-index: 1;
+  height: 764px;
+  margin-top: -87px;
+  padding-bottom: 16px;
+  background: transparent;
+}
+
+.section-art--faq {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 390px;
+  height: 1049px;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+}
+
+.faq-list {
+  position: absolute;
+  z-index: 2;
+  left: 37px;
+  top: 150px;
+  display: grid;
+  gap: 40px;
+  width: 316px;
+}
+
+.faq-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px 10px;
+  align-items: start;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.faq-item img {
+  width: 28px;
+  height: auto;
+}
+
+.faq-item p {
+  margin: 2px 0 0;
+}
+
+.faq-q-text {
+  font-weight: 600;
+}
+
+.company-card {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  gap: 12px;
+  align-items: center;
+  width: 390px;
+  padding: 14px 18px;
+  color: #000;
+  background: #f2f7ff;
+  box-sizing: border-box;
+}
+
+.company-logo {
+  width: 128px;
+  height: auto;
+}
+
+.company-info {
+  display: grid;
+  gap: 2px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.company-info p {
+  margin: 0;
+}
+
+.company-info span {
+  display: inline-block;
+  width: 36px;
+}
+
+.company-info a {
+  color: #12b7e1;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.company-name {
+  margin-bottom: 4px !important;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.company-addr {
+  margin-bottom: 4px !important;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.last-screen {
+  position: relative;
+  height: 285px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 20px;
+  background: #29126c;
+  overflow: hidden;
+}
+
+.last-bg {
+  position: absolute;
+  inset: 0;
+  width: 390px;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+.last-logo,
+.last-message {
+  position: relative;
+  z-index: 1;
+}
+
+.last-logo {
+  width: 260px;
+  height: auto;
+}
+
+.last-message {
+  margin: 0;
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 900ms ease, transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.parallax {
+  will-change: transform;
+}
+
+/* スクロール進行度でスクラブ表示する要素（story見出し・本文）。初期は非表示、JSがopacity/transformを制御 */
+.story-scrub {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* 後半セクションの装飾クリスタル（テキストの下・端寄せ・パララックス対応）
+   位置/サイズ/opacityは後で微調整しやすいよう個別クラスに分離 */
+.deco-crystal {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  height: auto;
+  object-fit: contain;
+}
+
+.deco-support-r { left: 288px; top: -48px; width: 203px; }
+.deco-support-l { left: -110px; top: 645px; width: 326px; }
+
+.deco-condition-r { right: -40px; top: 60px; width: 130px; }
+.deco-condition-l { left: -56px; top: 560px; width: 168px; }
+
+.deco-entry-tr { top: 40px; right: -26px; width: 116px; }
+
+.deco-flow-tl { top: 28px; left: -46px; width: 145px; }
+.deco-flow-br { top: 570px; right: -34px; width: 120px; z-index: 5; }
+
+.deco-notes-bl { top: 760px; left: -44px; width: 140px; }
+
+.deco-faq-r { top: 0; right: -28px; width: 108px; }
+.deco-faq-l { top: 530px; left: -42px; width: 138px; }
+
+/* ===== CTA / 目次（挙動は参照プロジェクト準拠。見た目は後で調整） =====
+   モバイル: .floating-cta を下部に固定オーバーレイ表示
+   デスクトップ(≥960px): 左に .side-panel-left（目次＋CTA）を固定表示し floating-cta は非表示 */
+.side-cta,
+.floating-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0 24px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(90deg, #8a78ff, #6e61dc);
+  box-shadow: 0 18px 34px rgba(60, 99, 185, 0.28);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+
+/* デスクトップ用パネルはモバイルでは隠す */
+.side-panel {
+  display: none;
+}
+
+/* モバイル: 下部固定オーバーレイCTA（参照サイトと同じボーダーフラッシュ） */
+.floating-cta {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100vw - 48px), 342px);
+  bottom: max(20px, calc(env(safe-area-inset-bottom) + 16px));
+  min-height: 54px;
+  font-size: 17px;
+  border: 2px solid rgba(255, 255, 255, 0.58);
+  box-shadow:
+    0 18px 34px rgba(60, 99, 185, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  isolation: isolate;
+  animation: cta-border-glow 2.8s ease-in-out infinite;
+  will-change: box-shadow, border-color;
+}
+
+.floating-cta::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -2px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.72);
+  animation: cta-ring-pulse 2.8s ease-in-out infinite;
+  will-change: opacity, inset, box-shadow;
+}
+
+@keyframes cta-border-glow {
+  0%, 52%, 100% {
+    border-color: rgba(255, 255, 255, 0.58);
+    box-shadow:
+      0 18px 34px rgba(60, 99, 185, 0.32),
+      0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  }
+  68%, 78% {
+    border-color: #ffffff;
+    box-shadow:
+      0 18px 34px rgba(60, 99, 185, 0.36),
+      0 0 28px rgba(255, 255, 255, 0.95),
+      0 0 0 1px rgba(255, 255, 255, 0.44) inset;
+  }
+}
+
+@keyframes cta-ring-pulse {
+  0%, 50% { inset: -2px; opacity: 0; box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+  64% { inset: -4px; opacity: 0.34; box-shadow: 0 0 14px rgba(255, 255, 255, 0.36); }
+  76% { inset: -8px; opacity: 0.9; box-shadow: 0 0 26px rgba(255, 255, 255, 0.82); }
+  88% { inset: -12px; opacity: 0.16; box-shadow: 0 0 34px rgba(255, 255, 255, 0.46); }
+  99% { inset: -16px; opacity: 0; box-shadow: 0 0 42px rgba(255, 255, 255, 0); }
+  100% { inset: -2px; opacity: 0; box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+@media (min-width: 960px) {
+  /* PCではcineも390中央クリッピングに戻す（全幅背景・暗幕を390に絞る） */
+  .cine-fullbg,
+  .cine-dim {
+    left: 50%;
+    right: auto;
+    width: 390px;
+    transform: translateX(-50%);
+  }
+
+  /* デスクトップ: 左サイドパネル（目次＋CTA）を固定表示 */
+  .side-panel-left {
+    display: flex;
+    position: fixed;
+    z-index: 60;
+    left: 0;
+    top: 0;
+    width: calc((100vw - 390px) / 2); /* 390コンテンツの左側の領域いっぱい＝内容をその中央に */
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    color: #f1eeff;
+  }
+
+  .side-inner {
+    width: min(100%, 340px);
+  }
+
+  .side-logo {
+    display: block;
+    width: 280px;
+    max-width: 100%;
+    margin: 0 0 30px;
+  }
+
+  .side-nav {
+    display: grid;
+    counter-reset: side-menu;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .side-nav a {
+    counter-increment: side-menu;
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    align-items: center;
+    min-height: 52px;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f1eeff;
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.35;
+    text-decoration: none;
+  }
+
+  .side-nav a::before {
+    content: counter(side-menu, decimal-leading-zero);
+    color: rgba(200, 190, 255, 0.9);
+    font-family: "Times New Roman", var(--serif), serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  .side-cta {
+    width: 100%;
+    margin-top: 30px;
+    min-height: 58px;
+    font-size: 17px;
+  }
+
+  .floating-cta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
