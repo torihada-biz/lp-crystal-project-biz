@@ -27,10 +27,9 @@ function fitStage() {
 /* シネマ枠の390x714フォンを、コンテンツ(.stage)と同じ幅基準でスケール（幅を揃える） */
 function fitCine() {
   const vw = window.innerWidth || 390;
-  const vh = window.innerHeight || 714;
-  // 前景(ロゴ/人/コピー/story)はビューポートに収める(contain)＝ヒーローもstoryも見切れない。
-  // 背景(.cine-fullbg)は別途全幅。PC(≥960)は PC_W 固定。
-  const scale = vw >= 960 ? PC_W / 390 : Math.min(vw / 390, vh / 714);
+  // .stage(コンテンツ)と完全に同じ幅基準。vh非依存にしてiOSのアドレスバー伸縮で
+  // cineが拡大したり、cine↔コンテンツでサイズが食い違う(ジャンプする)のを防ぐ。
+  const scale = vw >= 960 ? PC_W / 390 : vw / 390;
   cinePhones.forEach((p) => {
     p.style.transform = `scale(${scale})`;
   });

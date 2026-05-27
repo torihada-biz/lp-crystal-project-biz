@@ -1116,9 +1116,14 @@ body.is-loaded .splash {
     transform: translateX(-50%);
   }
 
-  /* PCでは前景を440でクリップ（crystal(幅430)が横にはみ出さない） */
+  /* PCでは前景を440でクリップ（crystal(幅430)が横にはみ出さない）。
+     overflow:hidden だと transform済みphone内のアニメ要素(crystal)のクリップ端が
+     スクロール毎に再描画されて右側がちらつく → コンポジタ層のclip-pathで安定させる */
   .cine__phone {
     overflow: hidden;
+    clip-path: inset(0);
+    backface-visibility: hidden;
+    will-change: transform;
   }
 
   /* デスクトップ: 左サイドパネル（目次＋CTA）を固定表示 */
