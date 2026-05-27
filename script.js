@@ -182,3 +182,25 @@ document.querySelectorAll(".side-nav a").forEach((link) => {
     if (smoothToHash(link.getAttribute("href"))) e.preventDefault();
   });
 });
+
+/* ===== モバイルCTAをiOSの「実際に見える下端」に固定 =====
+   iOS Safariは position:fixed の bottom を“大きい”レイアウトビューポート基準で解決するため、
+   下部ツールバー表示時などに bottom 指定が可視領域の外（フッターの下）に落ちてCTAが隠れる。
+   visualViewport で隠れている下部の高さを足し込み、常に可視領域の下端から浮かせる。 */
+const floatingCta = document.querySelector(".floating-cta");
+function placeFloatingCta() {
+  const vv = window.visualViewport;
+  if (!floatingCta || !vv) return; // 非対応環境はCSSの env() フォールバックに任せる
+  // レイアウトビューポート下端と可視領域下端の差（＝下に隠れている量）
+  const hiddenBottom = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+  floatingCta.style.bottom =
+    `calc(${hiddenBottom}px + env(safe-area-inset-bottom, 0px) + 16px)`;
+}
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", placeFloatingCta);
+  window.visualViewport.addEventListener("scroll", placeFloatingCta);
+}
+window.addEventListener("resize", placeFloatingCta);
+window.addEventListener("orientationchange", placeFloatingCta);
+window.addEventListener("load", placeFloatingCta);
+placeFloatingCta();
