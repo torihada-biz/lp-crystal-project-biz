@@ -1107,13 +1107,18 @@ body.is-loaded .splash {
 }
 
 @media (min-width: 960px) {
-  /* PCではcineも390中央クリッピングに戻す（全幅背景・暗幕を390に絞る） */
+  /* PCではcineも中央クリッピング（全幅背景・暗幕をPC幅440に絞る） */
   .cine-fullbg,
   .cine-dim {
     left: 50%;
     right: auto;
-    width: 390px;
+    width: 440px;
     transform: translateX(-50%);
+  }
+
+  /* PCでは前景を440でクリップ（crystal(幅430)が横にはみ出さない） */
+  .cine__phone {
+    overflow: hidden;
   }
 
   /* デスクトップ: 左サイドパネル（目次＋CTA）を固定表示 */
@@ -1123,7 +1128,7 @@ body.is-loaded .splash {
     z-index: 60;
     left: 0;
     top: 0;
-    width: calc((100vw - 390px) / 2); /* 390コンテンツの左側の領域いっぱい＝内容をその中央に */
+    width: calc((100vw - 440px) / 2); /* PC幅(440)コンテンツの左側の領域いっぱい＝内容をその中央に */
     height: 100vh;
     align-items: center;
     justify-content: center;

@@ -10,13 +10,15 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const ramp = (p, a, b) => clamp((p - a) / (b - a), 0, 1);
 
 /* .stage（TryVII以降）を画面幅に合わせて縮小 */
+const STAGE_W = 390;
+const PC_W = 440; // PC(≥960)での表示幅（390デザインを少し拡大して中央表示）
+
 function fitStage() {
   if (!stage || !stageWrap) return;
-  const STAGE_W = 390;
   const vw = window.innerWidth;
-  // <960: 幅いっぱいにスケール（黒帯なし） / ≥960: 390で固定し中央寄せ（PCは390クリッピング）
-  const scale = vw >= 960 ? 1 : vw / STAGE_W;
-  const offsetLeft = vw >= 960 ? Math.max(0, (vw - STAGE_W) / 2) : 0;
+  // <960: 幅いっぱいにスケール（黒帯なし） / ≥960: PC_Wで固定し中央寄せ
+  const scale = vw >= 960 ? PC_W / STAGE_W : vw / STAGE_W;
+  const offsetLeft = vw >= 960 ? Math.max(0, (vw - PC_W) / 2) : 0;
   stage.style.transform = `scale(${scale})`;
   stage.style.marginLeft = `${offsetLeft}px`;
   stageWrap.style.height = `${stage.offsetHeight * scale}px`;
@@ -27,8 +29,8 @@ function fitCine() {
   const vw = window.innerWidth || 390;
   const vh = window.innerHeight || 714;
   // 前景(ロゴ/人/コピー/story)はビューポートに収める(contain)＝ヒーローもstoryも見切れない。
-  // 背景(.cine-fullbg)は別途全幅。PC(≥960)は390固定。
-  const scale = vw >= 960 ? 1 : Math.min(vw / 390, vh / 714);
+  // 背景(.cine-fullbg)は別途全幅。PC(≥960)は PC_W 固定。
+  const scale = vw >= 960 ? PC_W / 390 : Math.min(vw / 390, vh / 714);
   cinePhones.forEach((p) => {
     p.style.transform = `scale(${scale})`;
   });
