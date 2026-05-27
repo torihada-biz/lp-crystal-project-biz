@@ -26,7 +26,7 @@ body {
   font-family: var(--sans);
   letter-spacing: 0;
   /* PCで390コンテンツの外側に出る背景。クリスタルを暗めにしてLPと馴染ませる（モバイルは全幅なので見えない） */
-  background: linear-gradient(rgba(12, 6, 40, 0.55), rgba(8, 4, 28, 0.72)), url("./assets/bg.png") center / cover fixed, #0a0524;
+  background: linear-gradient(rgba(12, 6, 40, 0.55), rgba(8, 4, 28, 0.72)), url("./assets/bg.webp") center / cover fixed, #0a0524;
 }
 
 img {
@@ -298,7 +298,7 @@ body.is-loaded .splash {
   margin: 0;
   overflow: hidden;
   transform-origin: top left;
-  background: url("./assets/bg.png") center top / cover repeat-y, #2a1a6f;
+  background: url("./assets/bg.webp") center top / cover repeat-y, #2a1a6f;
 }
 
 .phone {
@@ -440,7 +440,7 @@ body.is-loaded .splash {
 .tryvii-screen {
   position: relative;
   height: 714px;
-  background: url("./assets/bg.png") center / cover;
+  background: url("./assets/bg.webp") center / cover;
 }
 
 .section-art--tryvii {
@@ -772,7 +772,7 @@ body.is-loaded .splash {
   position: relative;
   height: 672px;
   margin-top: -60px;
-  background: url("./assets/bg.png") center / cover;
+  background: url("./assets/bg.webp") center / cover;
 }
 
 .section-art--flow {

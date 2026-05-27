@@ -14,3 +14,6 @@
 
 # バックアップ
 assets/hero-orig.gif
+
+# webp化した元画像のバックアップ（デプロイ不要）
+assets/_original/
