@@ -27,7 +27,8 @@ body {
   font-family: var(--sans);
   letter-spacing: 0;
   /* PCで390コンテンツの外側に出る背景。クリスタルを暗めにしてLPと馴染ませる（モバイルは全幅なので見えない） */
-  background: linear-gradient(rgba(12, 6, 40, 0.55), rgba(8, 4, 28, 0.72)), url("./assets/bg.webp") center / cover fixed, #0a0524;
+  /* PCで440コンテンツの外側に出る領域。明るい淡ラベンダーに（文字は視認性のため暗色に） */
+  background: linear-gradient(180deg, #f6f3fc 0%, #ece6f8 55%, #e3dcf3 100%) fixed, #efeafb;
 }
 
 img {
@@ -1142,7 +1143,7 @@ body.is-loaded .splash {
     align-items: center;
     justify-content: center;
     padding: 0 24px;
-    color: #f1eeff;
+    color: #2a1f55; /* 明るい外側領域に合わせて暗色 */
   }
 
   .side-inner {
@@ -1154,12 +1155,14 @@ body.is-loaded .splash {
     width: 280px;
     max-width: 100%;
     margin: 0 0 30px;
+    /* 白ロゴを明るい背景でも見えるよう、サイドのみ濃色シルエット化 */
+    filter: brightness(0) opacity(0.82);
   }
 
   .side-nav {
     display: grid;
     counter-reset: side-menu;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid rgba(42, 31, 85, 0.22);
   }
 
   .side-nav a {
@@ -1169,8 +1172,8 @@ body.is-loaded .splash {
     align-items: center;
     min-height: 52px;
     padding: 13px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-    color: #f1eeff;
+    border-bottom: 1px solid rgba(42, 31, 85, 0.16);
+    color: #2a1f55;
     font-family: var(--sans);
     font-size: 16px;
     font-weight: 400;
@@ -1180,7 +1183,7 @@ body.is-loaded .splash {
 
   .side-nav a::before {
     content: counter(side-menu, decimal-leading-zero);
-    color: rgba(200, 190, 255, 0.9);
+    color: rgba(110, 97, 220, 0.85);
     font-family: "Times New Roman", var(--serif), serif;
     font-size: 16px;
     font-style: normal;
