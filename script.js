@@ -188,6 +188,7 @@ document.querySelectorAll(".side-nav a").forEach((link) => {
    下部ツールバー表示時などに bottom 指定が可視領域の外（フッターの下）に落ちてCTAが隠れる。
    visualViewport で隠れている下部の高さを足し込み、常に可視領域の下端から浮かせる。 */
 const floatingCta = document.querySelector(".floating-cta");
+let ctaTicking = false;
 function placeFloatingCta() {
   const vv = window.visualViewport;
   if (!floatingCta || !vv) return; // 非対応環境はCSSの env() フォールバックに任せる
@@ -196,11 +197,20 @@ function placeFloatingCta() {
   floatingCta.style.bottom =
     `calc(${hiddenBottom}px + env(safe-area-inset-bottom, 0px) + 16px)`;
 }
-if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", placeFloatingCta);
-  window.visualViewport.addEventListener("scroll", placeFloatingCta);
+function requestCtaPlace() {
+  if (ctaTicking) return;
+  ctaTicking = true;
+  window.requestAnimationFrame(() => {
+    placeFloatingCta();
+    ctaTicking = false;
+  });
 }
-window.addEventListener("resize", placeFloatingCta);
-window.addEventListener("orientationchange", placeFloatingCta);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", requestCtaPlace);
+  window.visualViewport.addEventListener("scroll", requestCtaPlace);
+}
+window.addEventListener("resize", requestCtaPlace);
+window.addEventListener("scroll", requestCtaPlace, { passive: true });
+window.addEventListener("orientationchange", requestCtaPlace);
 window.addEventListener("load", placeFloatingCta);
 placeFloatingCta();

@@ -1053,7 +1053,10 @@ body.is-loaded .splash {
   position: fixed;
   z-index: 60;
   left: 50%;
-  transform: translateX(-50%);
+  /* translate3d でGPU合成レイヤーに昇格 → iOSがスクロール中もfixedを追従させる
+     （2D transformだと下スクロール中に再描画されず一時的に隠れることがある） */
+  transform: translate3d(-50%, 0, 0);
+  backface-visibility: hidden;
   width: min(calc(100vw - 48px), 342px);
   bottom: max(20px, calc(env(safe-area-inset-bottom) + 16px));
   min-height: 54px;
@@ -1064,7 +1067,7 @@ body.is-loaded .splash {
     0 0 0 1px rgba(255, 255, 255, 0.18) inset;
   isolation: isolate;
   animation: cta-border-glow 2.8s ease-in-out infinite;
-  will-change: box-shadow, border-color;
+  will-change: transform, box-shadow, border-color;
 }
 
 .floating-cta::after {
