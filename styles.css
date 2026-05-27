@@ -35,6 +35,23 @@ img {
   max-width: none;
 }
 
+/* ===== 全体の色味を抑えて淡いオーロラパープルに ===== */
+/* (1) アート画像の彩度を落としてやや明るく（色味を抑える・淡く） */
+.cine__pin img,
+.stage img {
+  filter: saturate(0.6) brightness(1.06);
+}
+/* (2) 全面に淡いラベンダーのベールをsoft-lightで薄く重ね、オーロラパープルへ統一 */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 55; /* コンテンツ・cineより前、CTA/サイドパネル(60)より後ろ */
+  background: rgba(190, 165, 232, 0.1);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
