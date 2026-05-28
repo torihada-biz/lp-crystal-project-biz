@@ -76,9 +76,9 @@ function renderCine(p) {
   // SCROLLインジケーターはopacityのみ操作（transformはCSSのバウンスを維持）
   if (L.scroll) L.scroll.style.opacity = (1 - ramp(p, 0.04, 0.14)).toFixed(3);
   setLayer(L.crystal, ramp(p, 0.28, 0.46));
-  setLayerCx(L.core, ramp(p, 0.28, 0.46));
+  setLayer(L.core, ramp(p, 0.28, 0.46));
   const idolP = ramp(p, 0.28, 0.58);
-  setLayerCx(L.idol, idolP, (1 - idolP) * 26);
+  setLayer(L.idol, idolP, (1 - idolP) * 26);
   const logoP = ramp(p, 0.28, 0.68);
   setLayer(L.logo, logoP, (1 - logoP) * 22);
   setLayer(L.ppp, ramp(p, 0.28, 0.7));

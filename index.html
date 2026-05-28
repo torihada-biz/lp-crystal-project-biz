@@ -37,13 +37,14 @@
     <section class="cine" id="cine" aria-label="メインビジュアル">
       <h1 class="visually-hidden">CRYSTAL 新アイドルグループメンバーオーディション</h1>
       <div class="cine__pin">
-        <!-- 全幅のクリスタル背景（左右の暗い領域を埋める） -->
+        <!-- KV_0528.psd 由来のレイヤー（背景・crystal・idol・light）は同一キャンバス座標で
+             重ねるため、cine__pin 直下に並べて cine-fullbg と同じ全幅スケールを共有する -->
         <img class="cine-fullbg" src="./assets/top-bg.webp" alt="">
-        <!-- 背面レイヤー（暗幕より下）：結晶・人・ロゴは390中央に -->
+        <img class="cine-layer cine-crystal" src="./assets/top-crystal.webp" alt="">
+        <img class="cine-layer cine-core" src="./assets/top-core.webp" alt="">
+        <img class="cine-layer cine-idol" src="./assets/top-idol.webp" alt="">
+        <!-- 背面レイヤー（暗幕より下）：ロゴ・リードは390中央に -->
         <div class="cine__phone">
-          <img class="cine-layer cine-crystal" src="./assets/top-crystal.webp" alt="">
-          <img class="cine-layer cine-core" src="./assets/top-core.webp" alt="">
-          <img class="cine-layer cine-idol" src="./assets/top-idol.webp" alt="">
           <img class="cine-layer cine-ppp" src="./assets/ppp-logo-1080-white.webp" alt="PPPSTUDIO">
           <img class="cine-layer cine-logo" src="./assets/top-logo.webp" alt="CRYSTAL">
           <img class="cine-layer cine-lead" src="./assets/lead.webp" alt="PPP STUDIO第二弾 新アイドルグループメンバー募集開始。">

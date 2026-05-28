@@ -157,48 +157,34 @@ body.is-loaded .splash {
   opacity: 1;
 }
 
-.cine-crystal {
-  left: -20px;
-  top: 145px;
-  width: 430px;
-  height: 558px;
+/* KV_0528.psd の各レイヤーは 1535x2732 フルキャンバスで書き出し。
+   cine-fullbg と同じ全幅・object-fit:cover で重ね、PSD の合成を viewport で再現する */
+.cine-crystal,
+.cine-core,
+.cine-idol {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  mix-blend-mode: screen;
+}
+
+.cine-crystal {
   opacity: 0;
   transform-origin: center center;
   animation: crystal-breathe 7s ease-in-out infinite;
 }
 
 @keyframes crystal-breathe {
-  0%, 100% { transform: scale(1.07); }
-  50% { transform: scale(1.09); }
+  0%, 100% { transform: scale(1.00); }
+  50% { transform: scale(1.02); }
 }
 
 .cine-core {
-  left: 50%;
-  top: 143px;
-  width: 232px;
-  height: 273px;
-  object-fit: contain;
-  mix-blend-mode: screen;
-  transform: translateX(-50%);
   opacity: 0;
-  animation: core-float 5.5s ease-in-out infinite;
-}
-
-/* core は JS が transform(translateX) を制御するため top で上下させる */
-@keyframes core-float {
-  0%, 100% { top: 143px; }
-  50% { top: 139px; }
 }
 
 .cine-idol {
-  left: 50%;
-  top: 299px;
-  width: 366px;
-  height: 399px;
-  object-fit: contain;
-  transform: translateX(-50%);
   opacity: 0;
 }
 
@@ -1112,13 +1098,18 @@ body.is-loaded .splash {
 }
 
 @media (min-width: 960px) {
-  /* PCではcineも中央クリッピング（全幅背景・暗幕をPC幅440に絞る） */
+  /* PCではcineも中央クリッピング（全幅背景・暗幕・PSDレイヤーをPC幅440に絞る）。
+     crystal/idol は JS/CSS が transform を制御するため、translateX ではなく
+     margin-left で中央寄せして transform を競合させない。 */
   .cine-fullbg,
+  .cine-crystal,
+  .cine-core,
+  .cine-idol,
   .cine-dim {
     left: 50%;
     right: auto;
     width: 440px;
-    transform: translateX(-50%);
+    margin-left: -220px;
   }
 
   /* PCでは前景を440でクリップ（crystal(幅430)が横にはみ出さない）。
